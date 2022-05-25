@@ -1,0 +1,38 @@
+version: '3.4'
+
+x-environment:
+    &default-environment
+    POSTGRES_USER: vscode
+    POSTGRES_PASSWORD: notsecure
+    POSTGRES_DB: tickets
+    DATABASE_URL: 'postgresql+psycopg2://vscode:notsecure@localhost/tickets'
+
+services:
+  wguhelpdesk:
+    image: wguhelpdesk
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      <<: *default-environment
+      PORT: 8080
+    ports:
+      - 8080:8080
+    working_dir: /var/www/app
+    volumes:
+      - ./backend:/var/www/app:rw
+      - ./frontend:/var/www/app/frontend:rw
+    depends_on:
+      - db
+  db:
+    image: "postgres:12"
+    restart: unless-stopped
+    environment: *default-environment
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../postgresql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+volumes:
+    pgdata:
+

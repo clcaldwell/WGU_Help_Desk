@@ -1,0 +1,8 @@
+flask
+gunicorn
+sqlalchemy
+flask-sqlalchemy
+Faker
+marshmallow_jsonapi
+flask_rest_jsonapi
+psycopg2-binary
